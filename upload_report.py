@@ -6,11 +6,13 @@ Robbie Basak <robie.basak@canonical.com>
 Joshua Powers <josh.powers@canonical.com>
 """
 from functools import lru_cache
-import itertools
 import sys
 
 import launchpadlib.launchpad
 from lazr.restfulclient.errors import ClientError
+
+SRU = 'SRU'
+DEV = 'DEV'
 
 
 @lru_cache()
@@ -79,14 +81,33 @@ def generate_uploads(start_date):
                     report_entry['migrated'] = (
                         report_entry['version'] in migrated_versions
                     )
-                report_entry['category'] = 'Development release'
+                report_entry['category'] = DEV
             else:
-                report_entry['category'] = 'SRU'
+                report_entry['category'] = SRU
 
             if report_entry['sponsor'] == 'ubuntu-archive-robot':
                 continue  # skip syncs
 
             yield report_entry
+
+
+def print_proposed_sru(entries):
+    """Print SRU Proposed entries."""
+    print('')
+    print('### Proposed Uploads to the Supported Release')
+    print('```')
+
+    if not entries:
+        print('none')
+        print('```')
+        return
+
+    for entry in entries:
+        uploader = entry['author'] if entry['author'] else entry['signer']
+        print('%s, %s, %s, %s' % (entry['package'], entry['series'],
+                                  entry['version'], uploader))
+    print('Total: %s' % len(entries))
+    print('```')
 
 
 def print_sru(entries):
@@ -134,16 +155,11 @@ def main():
         key=lambda r: r['category']
     )
 
-    grouped_report = itertools.groupby(
-        report,
-        key=lambda r: r['category'],
-    )
-
-    for category, entries in grouped_report:
-        if category == 'SRU':
-            print_sru(list(entries))
-        else:
-            print_dev(list(entries))
+    print_proposed_sru([item for item in report if item['category'] == SRU
+                       and item['pocket'] == 'Proposed'])
+    print_sru([item for item in report if item['category'] == SRU
+              and item['pocket'] == 'Updates'])
+    print_dev([item for item in report if item['category'] == DEV])
 
 
 if __name__ == '__main__':
