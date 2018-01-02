@@ -10,6 +10,7 @@ import itertools
 import sys
 
 import launchpadlib.launchpad
+from lazr.restfulclient.errors import ClientError
 
 
 @lru_cache()
@@ -22,7 +23,11 @@ def series_name(launchpad, series_link):
 def person_name(launchpad, person_link):
     """Translate name link to a name."""
     if person_link:
-        return launchpad.load(person_link).name
+        try:
+            return launchpad.load(person_link).name
+        except ClientError as exc:
+            if exc.response["status"] == "410":  # gone, user suspended
+               return None
     return None
 
 
@@ -55,6 +60,7 @@ def generate_uploads(start_date):
             report_entry = {
                 'package': spph.source_package_name,
                 'version': spph.source_package_version,
+                'author': person_name(launchpad, spph.package_creator_link),
                 'series': series_name(launchpad, spph.distro_series_link),
                 'signer': person_name(launchpad, spph.package_signer_link),
                 'sponsor': person_name(launchpad, spph.sponsor_link),
@@ -88,9 +94,16 @@ def print_sru(entries):
     print('')
     print('### Uploads to the Supported Release')
     print('```')
+
+    if not entries:
+        print('none')
+        print('```')
+        return
+
     for entry in entries:
+        uploader = entry['author'] if entry['author'] else entry['signer']
         print('%s, %s, %s, %s' % (entry['package'], entry['series'],
-                                  entry['version'], entry['signer']))
+                                  entry['version'], uploader))
     print('Total: %s' % len(entries))
     print('```')
 
@@ -100,9 +113,16 @@ def print_dev(entries):
     print('')
     print('### Uploads to the Development Releases')
     print('```')
+
+    if not entries:
+        print('none')
+        print('```')
+        return
+
     for entry in entries:
+        uploader = entry['author'] if entry['author'] else entry['signer']
         print('%s, %s, %s' % (entry['package'], entry['version'],
-                              entry['signer']))
+                              uploader))
     print('Total: %s' % len(entries))
     print('```')
 
