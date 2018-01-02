@@ -86,7 +86,7 @@ def generate_uploads(start_date):
 def print_sru(entries):
     """Print SRU entries."""
     print('')
-    print('### Uploads to the Development Release')
+    print('### Uploads to the Supported Release')
     print('```')
     for entry in entries:
         print('%s, %s, %s, %s' % (entry['package'], entry['series'],
@@ -98,7 +98,7 @@ def print_sru(entries):
 def print_dev(entries):
     """Print Dev release entries."""
     print('')
-    print('### Uploads to the Supported Releases')
+    print('### Uploads to the Development Releases')
     print('```')
     for entry in entries:
         print('%s, %s, %s' % (entry['package'], entry['version'],
