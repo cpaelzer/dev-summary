@@ -94,7 +94,7 @@ def generate_uploads(start_date):
 def print_proposed_sru(entries):
     """Print SRU Proposed entries."""
     print('')
-    print('### Proposed Uploads to the Supported Release')
+    print('### Proposed Uploads to the Supported Releases')
     print('```')
 
     if not entries:
@@ -113,7 +113,7 @@ def print_proposed_sru(entries):
 def print_sru(entries):
     """Print SRU entries."""
     print('')
-    print('### Uploads to the Supported Release')
+    print('### Uploads to the Supported Releases')
     print('```')
 
     if not entries:
@@ -132,7 +132,7 @@ def print_sru(entries):
 def print_dev(entries):
     """Print Dev release entries."""
     print('')
-    print('### Uploads to the Development Releases')
+    print('### Uploads to the Development Release')
     print('```')
 
     if not entries:
