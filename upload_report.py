@@ -101,6 +101,11 @@ def print_proposed_sru(entries):
     """Print SRU Proposed entries."""
     print('')
     print('### Proposed Uploads to the Supported Releases')
+    print('Please consider testing those by [enabling proposed]'
+          '(https://wiki.ubuntu.com/Testing/EnableProposed)')
+    print('and checking packages for update-regressions as well as')
+    print('for all affected bugs to become [verified as fixed]'
+          '(https://wiki.ubuntu.com/StableReleaseUpdates#Verification).')
     print('```')
 
     if not entries:
@@ -119,7 +124,7 @@ def print_proposed_sru(entries):
 def print_sru(entries):
     """Print SRU entries."""
     print('')
-    print('### Uploads to the Supported Releases')
+    print('### Uploads released to the Supported Releases')
     print('```')
 
     if not entries:
