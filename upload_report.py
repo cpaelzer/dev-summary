@@ -83,6 +83,12 @@ def generate_uploads(start_date):
                     )
                 report_entry['category'] = DEV
             else:
+                if report_entry['pocket'] == 'Updates':
+                    migrated_versions.add(report_entry['version'])
+                elif report_entry['pocket'] == 'Proposed':
+                    report_entry['migrated'] = (
+                        report_entry['version'] in migrated_versions
+                    )
                 report_entry['category'] = SRU
 
             if report_entry['sponsor'] == 'ubuntu-archive-robot':
@@ -156,7 +162,8 @@ def main():
     )
 
     print_proposed_sru([item for item in report if item['category'] == SRU
-                       and item['pocket'] == 'Proposed'])
+                       and item['pocket'] == 'Proposed'
+                       and not item['migrated']])
     print_sru([item for item in report if item['category'] == SRU
               and item['pocket'] == 'Updates'])
     print_dev([item for item in report if item['category'] == DEV])
