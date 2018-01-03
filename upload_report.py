@@ -115,8 +115,9 @@ def print_proposed_sru(entries):
 
     for entry in entries:
         uploader = entry['author'] if entry['author'] else entry['signer']
-        print('%s, %s, %s, %s' % (entry['package'], entry['series'],
-                                  entry['version'], uploader))
+        print('%s, %s, [%s](https://launchpad.net/ubuntu/+source/%s/%s), %s' %
+              (entry['package'], entry['series'], entry['version'],
+               entry['package'], entry['version'], uploader))
     print('Total: %s' % len(entries))
     print('```')
 
@@ -134,8 +135,9 @@ def print_sru(entries):
 
     for entry in entries:
         uploader = entry['author'] if entry['author'] else entry['signer']
-        print('%s, %s, %s, %s' % (entry['package'], entry['series'],
-                                  entry['version'], uploader))
+        print('%s, %s, [%s](https://launchpad.net/ubuntu/+source/%s/%s), %s' %
+              (entry['package'], entry['series'], entry['version'],
+               entry['package'], entry['version'], uploader))
     print('Total: %s' % len(entries))
     print('```')
 
@@ -153,8 +155,9 @@ def print_dev(entries):
 
     for entry in entries:
         uploader = entry['author'] if entry['author'] else entry['signer']
-        print('%s, %s, %s' % (entry['package'], entry['version'],
-                              uploader))
+        print('%s, [%s](https://launchpad.net/ubuntu/+source/%s/%s), %s' %
+              (entry['package'], entry['version'],
+               entry['package'], entry['version'], uploader))
     print('Total: %s' % len(entries))
     print('```')
 
